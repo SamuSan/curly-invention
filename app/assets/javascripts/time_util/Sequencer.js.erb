@@ -1,0 +1,109 @@
+function Sequencer (instrument_parts) {
+  var self = this;
+  var running = false;
+  var parts = new Arranger(instrument_parts).arrange();
+  var startedrunning = 0; // TODO for testing remove me
+  var tempo = 120.0;
+  var oneMinute = 60.0;
+  var eventsQueued = [];
+  var nextEventTime = 0.0;
+  var currentSubdivision = 4;  // TODO 16ths eg 4 subs per beat this is restrictive, time based is gross, options?
+  var currentStepNumber = 0;
+  var performanceRunning = false;
+  var oneBeatTimeValue = (oneMinute / tempo);
+  var schedulingLookAhead = 50.0;
+  var scheduleEventHorizon = 0.1;
+  var sequencerWorker = null;
+  var context = window.AudioEnvironment.context;
+
+  function advanceStep() {
+    oneBeatTimeValue = (oneMinute / tempo);
+    nextEventTime += (oneBeatTimeValue / currentSubdivision);
+
+    currentStepNumber ++;
+    if(currentStepNumber == 64) {
+      currentStepNumber = 0;
+    }
+  }
+
+  function scheduleEvent( stepNumber, time ) {
+   // db(stepNumber % 4);
+    self.parts.forEach(function(part) {
+      var startTime = nextEventTime;
+      if(!eventsQueued[part.generator.name() + "" + startTime.toFixed(5)]){
+        // db("Scheduling:  " + nextEventTime.toFixed(5) );
+        var endTime = nextEventTime + (oneBeatTimeValue / currentSubdivision);
+        eventsQueued.push(part.generator.name() + "" + startTime.toFixed(5) );
+        if (part.rhythm[stepNumber] == 1) {
+          db("Scheduling:  " + part.generator.name() + "" + startTime.toFixed(5))
+          part.generator.play(startTime, endTime);
+        };
+      }
+    });
+  }
+
+  function eventScheduler() {
+    while (nextEventTime < context.currentTime + scheduleEventHorizon ) {
+      scheduleEvent( currentStepNumber, nextEventTime );
+      advanceStep();
+      var runningTime = context.currentTime - startedrunning;
+    }
+  }
+
+  function startPerformance(parts) {
+    startedrunning = context.currentTime;
+    self.parts = parts; 
+    currentStepNumber = 0;
+
+    nextEventTime = context.currentTime;
+    sequencerWorker.postMessage('running');
+  }
+
+  function stopPerformance() {
+    db("stopping");
+    sequencerWorker.postMessage('stop');
+  }
+
+  self.stop = function() {
+   sequencerWorker.postMessage('stop'); 
+   parts.forEach(function(p){
+    p.generator.stop();
+   });
+   running = false;
+  }
+
+  self.run = function() {
+    db("Running sequencer");
+    running = true;
+    performanceRunning = !performanceRunning;
+    performanceRunning ? startPerformance(parts) : stopPerformance();
+  }
+
+  self.running = function() {
+    return running;
+  }
+
+  self.updateTempo = function(newTempo) {
+    tempo = newTempo;
+  }
+
+  self.init = function() {
+    db("Initialising sequencer");
+    sequencerWorker = new Worker("<%= javascript_path "sequencerWorker.js" %>");
+
+    sequencerWorker.onmessage = function(e) {
+      if(e.data == 'step') {
+        // db(e.data);
+        eventScheduler();
+      }
+      else {
+        db('Received :' + e.data);
+      }
+    };
+    sequencerWorker.postMessage({ "schedulingLookAhead": schedulingLookAhead });
+  }
+
+  function db(message) {
+    console.log(message);
+  }
+}

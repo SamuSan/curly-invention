@@ -1,0 +1,31 @@
+{
+  "name": "midiutils",
+  "description": "A series of methods to work with MIDI",
+  "version": "0.0.4",
+  "main": "src/MIDIUtils.js",
+  "homepage": "https://github.com/sole/MIDIUtils",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/sole/MIDIUtils.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sole/MIDIUtils/issues"
+  },
+  "licenses": [
+    {
+      "type": "GPL",
+      "url": "https://github.com/sole/MIDIUtils/blob/master/LICENSE"
+    }
+  ],
+  "keywords": [
+    "notes, midi, frequencies, note names, note map"
+  ],
+  "readme": "# MIDIUtils\n\n>Methods for dealing with MIDI data (note numbers, note names, frequencies, etc).\n\n## Getting it\n\n### Node/Browserify\n\nInstall using npm:\n\n`npm install midiutils`\n\nThen require it before using in your code:\n\n````javascript\nvar MIDIUtils = require('midiutils');\n\nMIDIUtils.noteNameToNoteNumber('A-4');\n````\n\n### Just the browser, thanks!\n\nYou can also download/clone the source. Then just include the source using a `script` tag before using the library:\n\n````html\n<script src=\"path/to/MIDIUtils.js\"></script>\n````\n\n## API\n\n### noteNameToNoteNumber( name )\n\nReturns the MIDI note number corresponding to the note ```name```.\n\n\n````javascript\nMIDIUtils.noteNameToNoteNumber( 'A-0' );    // returns 21\nMIDIUtils.noteNameToNoteNumber( 'C-4' );    // returns 60\n````\n\n### noteNumberToFrequency( number )\n\nReturns the frequency represented by ```noteNumber```.\n\n````javascript\nMIDIUtils.noteNumberToFrequency( 69 ); // returns 440 Hz -- i.e. A-4\n````\n\n### noteNumberToName( number )\n\nReturns the MIDI note name corresponding to the note ```number```.\n\n````javascript\nMIDIUtils.noteNumberToName( 21 ); // returns 'A-0'\n````\n\n### frequencyToNoteNumber( frequency )\n\nReturns the note number that corresponds to this frequency.\n\n````javascript\nMIDIUtils.frequencyToNoteNumber( 440.000 ); // returns 69\n````\n\n## Getting involved\n\nIf you want to get involved with the development of this library or want to contribute, make sure the code you add or change follows the same style as the existing code (whitespace, indenting, etc) and looks consistent with the rest.\n\nAlso new features must also be accompanied by both documentation and examples, and new tests demonstrating the usage of the feature, and existing tests must not break.\n",
+  "readmeFilename": "README.md",
+  "_id": "midiutils@0.0.4",
+  "dist": {
+    "shasum": "148c2fb9ffb6f34f42edc5edd0dac8b08ed68032"
+  },
+  "_from": "midiutils@",
+  "_resolved": "https://registry.npmjs.org/midiutils/-/midiutils-0.0.4.tgz"
+}

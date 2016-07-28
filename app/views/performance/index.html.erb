@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href='https://fonts.googleapis.com/css?family=Coda+Caption:800' rel='stylesheet' type='text/css'>
+  </head>
+  <body>
+  <div class="title-div">
+    <span class="title-span">Graceful Music</span>
+  </div>
+    <div class="container content-div">
+      <div class="row">
+        <div class="col-md-10">
+          <div class="card input-div">
+            <textarea class="form-control input-textarea" rows="3" id="text-area"></textarea>
+          </div>
+          <div id="error-div" class="card error-div"></div>
+        </div>
+        <div class="col-md-2">
+          <%= render "controls" %>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>   
