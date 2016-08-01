@@ -1,5 +1,0 @@
-hopper.prelude.then(function(prelude) {
-  prelude.method_name = hopper.runtime.method("method_name", 0, function() {
-    return "dopes a thing";
-  })
-});
